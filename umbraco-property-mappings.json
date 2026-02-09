@@ -63,7 +63,27 @@
       "dataTypeGuid": "TODO-create-in-umbraco",
       "editorAlias": "Umbraco.BlockList",
       "tsType": "Array<ElementType>",
-      "notes": "Complex editor for repeating structured content. Requires: 1) Element Types to define block structure, 2) Block List data type configured with allowed element types. Frontend defines array of objects - each object property becomes a field in the Element Type. Example: items: FeaturedCard[] where FeaturedCard has { heading, description, icon } properties."
+      "notes": "Complex editor for repeating structured content. Requires: 1) Element Types to define block structure, 2) Block List data type configured with allowed element types. Frontend defines array of objects - each object property becomes a field in the Element Type. Example: items: FeaturedCard[] where FeaturedCard has { heading, description, icon } properties.",
+      "examples": [
+        {
+          "name": "Services Section - Featured Cards",
+          "storybookUrl": "http://localhost:6006/?path=/docs/doctypes-services-section--docs",
+          "configFile": "UmbracoStorySource/uSync/v17/DataTypes/BlockListServicesSection.config",
+          "dataTypeGuid": "a1b2c3d4-5678-90ab-cdef-123456789abc",
+          "elementTypes": [
+            {
+              "name": "Featured Card",
+              "alias": "featuredCard",
+              "properties": [
+                { "alias": "symbol", "type": "string", "description": "Icon symbol" },
+                { "alias": "symbolColor", "type": "string", "description": "Icon color" },
+                { "alias": "heading", "type": "string", "description": "Card heading" },
+                { "alias": "description", "type": "richtext", "description": "Card description" }
+              ]
+            }
+          ]
+        }
+      ]
     }
   },
   "mappings": {
@@ -87,27 +107,51 @@
       "mandatory": false,
       "validation": "",
       "notes": "Frontend team convention: whenever they use 'backgroundColor' property, map to this Color Picker data type. WARNING: Frontend aiPage.stories.tsx currently shows 'white' | 'grey' | 'blue' but Umbraco has 'Pink', 'Blue', 'Green' - need to sync these values!"
+    },
+    "numberColor": {
+      "dataTypeAlias": "[Dropdown] Color Picker",
+      "dataTypeGuid": "7fe18493-bd95-40e9-8076-1ed877450db0",
+      "umbracoEditorAlias": "Umbraco.DropDown.Flexible",
+      "propertyType": "Umbraco.DropDown.Flexible",
+      "description": "Color for number blocks",
+      "options": ["Pink", "Blue", "Green"],
+      "mandatory": false,
+      "validation": "",
+      "notes": "Used in number/stat blocks. Note: naming could be better (backgroundColor would be clearer), but accepting as-is."
+    },
+    "symbolColor": {
+      "dataTypeAlias": "[Dropdown] Color Picker",
+      "dataTypeGuid": "7fe18493-bd95-40e9-8076-1ed877450db0",
+      "umbracoEditorAlias": "Umbraco.DropDown.Flexible",
+      "propertyType": "Umbraco.DropDown.Flexible",
+      "description": "Color for symbol icons",
+      "options": ["Pink", "Blue", "Green"],
+      "mandatory": false,
+      "validation": "",
+      "notes": "Used in featured cards. Any property ending with 'Color' should check this mappings file to see which color picker to use."
     }
   },
   "namingConventions": {
     "camelCase": "Frontend property names (e.g., backgroundColor)",
     "propertyAlias": "Same as frontend (e.g., backgroundColor)",
-    "displayName": "Convert to Title Case with spaces (e.g., Background Color)"
+    "displayName": "Convert to Title Case with spaces (e.g., Background Color)",
+    "colorProperties": "Properties ending with 'Color' or named with 'color' should use appropriate color picker data types (colorpicker, brandcolors, etc.) - check mappings for which one to use"
   },
   "workflowNotes": {
     "storybookToUsync": {
-      "step1": "Read TypeScript interface for property names and check for ? (optional)",
+      "step1": "Read TypeScript interface for property names",
       "step2": "Read argTypes table.type.summary to determine Umbraco data type",
       "step3": "Look up type in simpleTypes section of this file",
-      "step4": "Check table.category === 'Required' OR TypeScript lacks ? to determine mandatory",
-      "step5": "Generate uSync XML with correct data type GUID and settings"
+      "step4": "Check ONLY table.category === 'Required' to determine mandatory (DEFAULT = OPTIONAL)",
+      "step5": "Generate uSync XML with correct data type GUID and settings",
+      "mandatoryRule": "80% of properties are optional. ONLY mark <Mandatory>true</Mandatory> if argTypes explicitly specifies category: 'Required'. TypeScript ? syntax is IGNORED for mandatory determination."
     },
     "simplifiedApproach": {
       "description": "Frontend uses ONLY standard Storybook features - no hidden metadata",
       "frontendResponsibility": [
-        "Define properties with TypeScript optional syntax (? = optional)",
+        "Define properties with TypeScript (? syntax is for type safety, NOT for mandatory status)",
         "Add table.type.summary with Umbraco type name (e.g., 'string', 'richtext')",
-        "Optionally add table.category: 'Required' for mandatory fields",
+        "ONLY add table.category: 'Required' if field is truly mandatory (default = optional)",
         "Everything is VISIBLE in Storybook docs"
       ],
       "backendResponsibility": [

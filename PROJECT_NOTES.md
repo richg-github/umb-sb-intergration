@@ -120,10 +120,16 @@ parameters: {
 
 Frontend uses **standard Storybook features only** - no hidden metadata:
 
+**MANDATORY FIELD RULE (Critical):**
+- **Default = Optional** (80% of properties are optional in CMS)
+- **ONLY mark mandatory** when `table.category: 'Required'` is explicitly set
+- **TypeScript `?` syntax is IGNORED** for mandatory determination (only for type safety)
+- This prevents over-constraining content editors and gives them flexibility
+
 ```typescript
 interface HeroProps {
-  title: string;           // No ? = mandatory
-  description?: string;    // ? = optional
+  title: string;           // TypeScript type (? is for type safety only)
+  description: string;     // TypeScript type (mandatory status set via argTypes)
 }
 
 argTypes: {
@@ -131,7 +137,7 @@ argTypes: {
     control: 'text',
     table: {
       type: { summary: 'string' },  // ← Visible in Storybook docs
-      category: 'Required'          // ← Shows as mandatory
+      category: 'Required'          // ← ONLY way to mark mandatory
     }
   },
   description: {
@@ -416,6 +422,144 @@ Everything frontend needs to know is **visible in Storybook documentation**. Bac
 - **ContentType Alias**: camelCase (e.g., `aiPage`)
 - **ContentType Name**: Title Case (e.g., "AI Page")
 
+## ⚠️ CRITICAL RULES
+
+### Rule #1: Mandatory Field Default = OPTIONAL
+
+**Default Behavior**: All properties are optional unless explicitly marked
+
+**How to Mark Mandatory:**
+```typescript
+argTypes: {
+  title: {
+    table: {
+      category: 'Required'  // ← ONLY way to make mandatory
+    }
+  }
+}
+```
+
+**What Gets Ignored:**
+- TypeScript `?` syntax (only for type safety, NOT for CMS)
+- TypeScript `!` syntax
+- Any other TypeScript modifiers
+
+**Why:**
+- 80% of CMS properties should be optional
+- Gives content editors flexibility
+- Prevents over-constraining the CMS
+- Frontend uses `?` for compile-time checks, CMS uses `category` for validation
+
+**Result:**
+- No `category: 'Required'` → `<Mandatory>false</Mandatory>`
+- Has `category: 'Required'` → `<Mandatory>true</Mandatory>`
+
+### Rule #2: Always Look for Existing Examples First
+
+**Before creating ANY new uSync config file, ALWAYS:**
+
+1. **Search for similar existing configs** in `/UmbracoStorySource/uSync/v17/`
+2. **Read the existing file** to understand the exact structure
+3. **Copy the pattern** - don't invent your own structure
+4. **Add to existing files** when appropriate (like Block Lists)
+
+### Example: Adding to Block Lists
+
+❌ **WRONG**: Creating a new Block List data type file  
+✅ **CORRECT**: Follow this exact order (CANNOT skip steps):
+
+**Step 1: Generate REAL GUIDs for new Element Types**
+```bash
+uuidgen | tr '[:upper:]' '[:lower:]'
+# Returns: 0b3ca9db-6aad-4973-987f-fc9f7d229f9a (for featuredCard)
+# Returns: 46f4f2ed-5285-483c-a2ea-2246af55f250 (for featuredCardSettings)
+```
+- Generate one GUID per element type
+- Use `uuidgen` to ensure valid UUIDs
+- Keep track of which GUID is for which element type
+
+**Step 2: Create Element Type configs using those SAME GUIDs**
+```xml
+<ContentType Key="0b3ca9db-6aad-4973-987f-fc9f7d229f9a" Alias="featuredCard">
+```
+- Use the EXACT GUIDs generated in Step 1
+- These GUIDs will be consistent across all files
+
+**Step 3: Add to Block List using those SAME GUIDs**
+```json
+// Add to BlockListMainContent.config using SAME GUIDs from Step 1
+{
+  "contentElementTypeKey": "0b3ca9db-6aad-4973-987f-fc9f7d229f9a",  // SAME as featuredCard
+  "settingsElementTypeKey": "46f4f2ed-5285-483c-a2ea-2246af55f250", // SAME as featuredCardSettings
+  "label": "**Featured Card**: {umbValue: symbol} {umbValue: heading} ${$settings.hide == \u00271\u0027 ? \u0027[HIDDEN]\u0027 : \u0027\u0027}"
+}
+```
+
+**Critical Rules:**
+- ⚠️ **Generate GUIDs FIRST** using `uuidgen`
+- ⚠️ **Use THE SAME GUIDs** in element type files AND Block List references
+- ⚠️ **GUIDs must match exactly** across all files that reference them
+- Missing `settingsElementTypeKey` breaks the pattern
+- Label must include `${$settings.hide...}` conditional like other blocks
+- Invalid GUIDs (containing "defg" etc.) cause validation errors
+- **Label syntax**: Use `{umbValue: propertyName}` NOT `{propertyName}` - always check existing examples!
+
+**Why this matters:**
+- Block Lists reference Element Types by GUID - they must match exactly
+- If GUIDs don't match, uSync will fail to import
+- `uuidgen` ensures valid, unique UUIDs
+- One Block List can contain many different block types
+
+**Example Workflow:**
+```bash
+# 1. Generate GUIDs
+GUID1=$(uuidgen | tr '[:upper:]' '[:lower:]')  # 0b3ca9db-6aad-4973-987f-fc9f7d229f9a
+GUID2=$(uuidgen | tr '[:upper:]' '[:lower:]')  # 46f4f2ed-5285-483c-a2ea-2246af55f250
+
+# 2. Use in featuredcard.config: 
+#    - Key="0b3ca9db-6aad-4973-987f-fc9f7d229f9a"
+#    - Description: Client-friendly, NO dev references
+# 3. Use in featuredcardsettings.config: Key="46f4f2ed-5285-483c-a2ea-2246af55f250"
+# 4. Use in BlockListMainContent.config:
+#    - contentElementTypeKey: "0b3ca9db-6aad-4973-987f-fc9f7d229f9a"
+#    - settingsElementTypeKey: "46f4f2ed-5285-483c-a2ea-2246af55f250"
+#    - label: Clean, shows content values only
+```
+
+**Storybook Documentation:**
+Map Storybook stories to Umbraco element types in THIS file (PROJECT_NOTES.md), NOT in Umbraco configs:
+- Featured Card element → `servicesSection.stories.tsx` → http://localhost:6006/?path=/docs/doctypes-services-section--docs
+- Keep mapping centralized for developers
+- Clients never see Storybook references
+
+## Storybook and Umbraco: Keep Them Separate
+
+**CRITICAL RULE: NO Storybook references in Umbraco configs**
+
+**Why:**
+- Umbraco is for **clients/content editors** - they don't care about Storybook
+- Storybook is a **dev tool** - documentation happens elsewhere
+- Keep client-facing UI clean and professional
+- Dev documentation should be separate from production configs
+
+**What this means:**
+- ❌ NO Storybook URLs in Block List labels
+- ❌ NO Storybook URLs in Element Type descriptions
+- ❌ NO dev-specific references in any uSync configs
+- ✅ Keep descriptions client-friendly and clear
+- ✅ Document Storybook links separately (in PROJECT_NOTES.md, README, etc.)
+
+**Block List Label Best Practice:**
+```json
+{
+  "label": "**Featured Card**: {umbValue: symbol} {umbValue: heading} ${$settings.hide == \u00271\u0027 ? \u0027[HIDDEN]\u0027 : \u0027\u0027}"
+}
+```
+- Focus on showing content values (symbol, heading)
+- Include hide/show conditional
+- Keep it concise and readable
+- No technical/dev references
+
 ## File Naming Conventions
 
 ### uSync Files
@@ -473,15 +617,51 @@ Compare original Storybook types with generated types:
 
 This creates a feedback loop ensuring consistency across the entire stack.
 
+## Umbraco Best Practices & Examples Section
+
+**FUTURE GOAL**: Create a dedicated section in Umbraco containing:
+
+### Reference Content Types
+- Example Document Types showing all field types
+- Block List with all available blocks
+- Naming conventions examples
+- Property organization patterns
+
+### Reference Data Types
+- One of each data type we use
+- Configured with best practices
+- Includes Storybook links
+- Documents when to use each
+
+### Reference Content Nodes
+- Live examples of each content type
+- Populated with realistic content
+- Shows how fields work together
+- Demonstrates validation rules
+
+**Purpose:**
+- Onboard new developers quickly
+- Establish team conventions
+- Provide working examples to copy
+- Living documentation that stays in sync
+
+**Location Ideas:**
+- Root folder: `/Reference Examples/`
+- Hidden from public site
+- Accessible only to developers/admins
+- Synced via uSync for consistency
+
 ## Next Steps / TODO
 
 1. [ ] Sync frontend `backgroundColor` values with Umbraco Color Picker options
-2. [ ] Add more data types to mappings file (Rich Text, Image Picker, etc.)
-3. [ ] Create automation script to generate uSync from Storybook stories
-4. [ ] Document Swagger → TypeScript generation process
-5. [ ] Create validation script to compare Storybook types vs generated types
-6. [ ] Add more simple types to mappings (textarea, number, checkbox, etc.)
-7. [ ] Document DeliveryApiExtensions configuration and usage
+2. [ ] Create Element Type for Featured Card (needed for Block List)
+3. [ ] Create Umbraco "Reference Examples" section with best practices
+4. [ ] Add more data types to mappings file (Rich Text, Image Picker, etc.)
+5. [ ] Create automation script to generate uSync from Storybook stories
+6. [ ] Document Swagger → TypeScript generation process
+7. [ ] Create validation script to compare Storybook types vs generated types
+8. [ ] Add more simple types to mappings (textarea, number, checkbox, etc.)
+9. [ ] Document DeliveryApiExtensions configuration and usage
 
 ## Running Storybook
 
