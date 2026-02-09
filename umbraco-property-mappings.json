@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Maps frontend property names to Umbraco data types for automated uSync file generation",
+  "version": "2.0.0",
+  "typeTranslation": {
+    "description": "Frontend uses simple, visible type names. Backend translates to Umbraco data types.",
+    "howItWorks": "Frontend adds table.type.summary to argTypes. Backend reads this and looks up the full Umbraco configuration here."
+  },
+  "simpleTypes": {
+    "string": {
+      "description": "Simple text input field",
+      "umbracoDataType": "Textstring",
+      "dataTypeGuid": "0cc0eba1-9960-42c9-bf9b-60e150b429ae",
+      "editorAlias": "Umbraco.TextBox",
+      "tsType": "string",
+      "notes": "Single line text input"
+    },
+    "richtext": {
+      "description": "Rich text editor with formatting",
+      "umbracoDataType": "Rich Text Editor",
+      "dataTypeGuid": "TODO-create-in-umbraco",
+      "editorAlias": "Umbraco.TinyMCE",
+      "tsType": "string",
+      "notes": "Multi-line formatted text. API returns HTML markup as string."
+    },
+    "colorpicker": {
+      "description": "Color selection dropdown",
+      "umbracoDataType": "[Dropdown] Color Picker",
+      "dataTypeGuid": "7fe18493-bd95-40e9-8076-1ed877450db0",
+      "editorAlias": "Umbraco.DropDown.Flexible",
+      "tsType": "'Pink' | 'Blue' | 'Green'",
+      "options": ["Pink", "Blue", "Green"],
+      "notes": "Use when backgroundColor needs Pink/Blue/Green options. For brand colors, see 'brandcolors' instead."
+    },
+    "brandcolors": {
+      "description": "Brand color dropdown (mustard, coral, etc.)",
+      "umbracoDataType": "[Dropdown] Brand Colors",
+      "dataTypeGuid": "TODO-create-in-umbraco",
+      "editorAlias": "Umbraco.DropDown.Flexible",
+      "tsType": "'mustard' | 'coral' | 'blue' | 'green' | 'gray'",
+      "options": ["mustard", "coral", "blue", "green", "gray"],
+      "notes": "Used for backgroundColor with brand colors"
+    },
+    "mediapicker": {
+      "description": "Image/media picker",
+      "umbracoDataType": "Media Picker",
+      "dataTypeGuid": "TODO-use-built-in-or-create",
+      "editorAlias": "Umbraco.MediaPicker3",
+      "tsType": "{ src: string; alt: string }",
+      "notes": "Picks images/media. Frontend receives object with url, name, etc."
+    },
+    "urlpicker": {
+      "description": "Link/URL picker",
+      "umbracoDataType": "Multi URL Picker",
+      "dataTypeGuid": "TODO-use-built-in-or-create",
+      "editorAlias": "Umbraco.MultiUrlPicker",
+      "tsType": "{ href: string; text: string }",
+      "notes": "Picks internal/external links. Frontend receives object with url info."
+    }
+  },
+  "mappings": {
+    "pageTitle": {
+      "dataTypeAlias": "Textstring",
+      "dataTypeGuid": "0cc0eba1-9960-42c9-bf9b-60e150b429ae",
+      "umbracoEditorAlias": "Umbraco.TextBox",
+      "propertyType": "Umbraco.TextBox",
+      "description": "The page title",
+      "mandatory": true,
+      "validation": "",
+      "notes": "Standard text box for page titles. Usually mandatory."
+    },
+    "backgroundColor": {
+      "dataTypeAlias": "[Dropdown] Color Picker",
+      "dataTypeGuid": "7fe18493-bd95-40e9-8076-1ed877450db0",
+      "umbracoEditorAlias": "Umbraco.DropDown.Flexible",
+      "propertyType": "Umbraco.DropDown.Flexible",
+      "description": "The background color of the page",
+      "options": ["Pink", "Blue", "Green"],
+      "mandatory": false,
+      "validation": "",
+      "notes": "Frontend team convention: whenever they use 'backgroundColor' property, map to this Color Picker data type. WARNING: Frontend aiPage.stories.tsx currently shows 'white' | 'grey' | 'blue' but Umbraco has 'Pink', 'Blue', 'Green' - need to sync these values!"
+    }
+  },
+  "namingConventions": {
+    "camelCase": "Frontend property names (e.g., backgroundColor)",
+    "propertyAlias": "Same as frontend (e.g., backgroundColor)",
+    "displayName": "Convert to Title Case with spaces (e.g., Background Color)"
+  },
+  "workflowNotes": {
+    "storybookToUsync": {
+      "step1": "Read TypeScript interface for property names and check for ? (optional)",
+      "step2": "Read argTypes table.type.summary to determine Umbraco data type",
+      "step3": "Look up type in simpleTypes section of this file",
+      "step4": "Check table.category === 'Required' OR TypeScript lacks ? to determine mandatory",
+      "step5": "Generate uSync XML with correct data type GUID and settings"
+    },
+    "simplifiedApproach": {
+      "description": "Frontend uses ONLY standard Storybook features - no hidden metadata",
+      "frontendResponsibility": [
+        "Define properties with TypeScript optional syntax (? = optional)",
+        "Add table.type.summary with Umbraco type name (e.g., 'string', 'richtext')",
+        "Optionally add table.category: 'Required' for mandatory fields",
+        "Everything is VISIBLE in Storybook docs"
+      ],
+      "backendResponsibility": [
+        "Parse table.type.summary from argTypes",
+        "Map type names to Umbraco data types using simpleTypes config",
+        "Generate full uSync XML with all GUIDs and editor aliases",
+        "Handle property naming conventions (camelCase → Title Case)",
+        "Manage sort order and tab placement"
+      ],
+      "example": {
+        "frontendCode": "table: { type: { summary: 'colorpicker' }, category: 'Required' }",
+        "backendLookup": "simpleTypes.colorpicker",
+        "generatedConfig": {
+          "Definition": "7fe18493-bd95-40e9-8076-1ed877450db0",
+          "Type": "Umbraco.DropDown.Flexible",
+          "dataTypeAlias": "[Dropdown] Color Picker",
+          "Mandatory": "true"
+        }
+      }
+    }
+  },
+  "usage": {
+    "description": "When generating uSync files from Storybook stories:",
+    "steps": [
+      "1. Parse .stories.tsx file and extract argTypes",
+      "2. For each property, read table.type.summary (e.g., 'brandcolors')",
+      "3. Look up type in simpleTypes section of this file",
+      "4. Extract dataTypeGuid for <Definition> in uSync XML",
+      "5. Extract editorAlias for <Type> in uSync XML",
+      "6. Check TypeScript ? or table.category === 'Required' for <Mandatory>",
+      "7. Convert property name to Title Case for <Name> (e.g., Background Color)",
+      "8. Keep camelCase for <Alias> (e.g., backgroundColor)"
+    ],
+    "addingNewTypes": {
+      "step1": "Create data type in Umbraco and note the GUID",
+      "step2": "Add entry to simpleTypes in this file",
+      "step3": "Add story example to UmbracoFieldReference.stories.tsx",
+      "step4": "Frontend can now use it via table.type.summary"
+    },
+    "criticalLearnings": [
+      "IMPORTANT: Properties are sorted by SortOrder, NOT by the order they appear in XML",
+      "LESSON LEARNED: pageTitle has sortOrder: 0, backgroundColor has sortOrder: 1, so pageTitle appears FIRST in Umbraco even though it comes after in the GenericProperties list",
+      "CONVENTION: When frontend defines a property in TypeScript interface but NOT in argTypes, check this mapping file for the data type to use",
+      "VALIDATION ISSUE: Frontend aiPage.stories.tsx shows backgroundColor as 'white' | 'grey' | 'blue' BUT Umbraco Color Picker has 'Pink', 'Blue', 'Green' - these MUST be synced!",
+      "TODO: Update frontend TypeScript interface OR Umbraco data type options to match",
+      "FORMAT NOTE: <Mandatory>true</Mandatory> should be set based on argTypes umbraco.mandatory value from Storybook",
+      "FORMAT NOTE: <Description> comes from the TypeScript JSDoc comment or argTypes description"
+    ]
+  }
+}
