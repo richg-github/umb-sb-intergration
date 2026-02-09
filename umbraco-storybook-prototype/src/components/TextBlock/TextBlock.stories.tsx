@@ -13,7 +13,7 @@ const meta = {
       name: 'AI Text Block',
       alias: 'aiTextBlock',
       icon: 'icon-document-dashed-line',
-      description: 'A simple text content block (AI-generated from Storybook)',
+      description: 'A simple text content block (AI-generated from SB)',
       isElement: true,
       group: 'AI Blocks',
     },
@@ -24,7 +24,7 @@ const meta = {
       description: 'The block heading',
       table: { category: 'Content' },
       umbraco: {
-        propertyEditorAlias: 'Umbraco.TextBox',
+        propertyEditorAlias: 'Umb.TextBox',
         label: 'Heading',
         alias: 'heading',
         mandatory: false,
@@ -37,7 +37,7 @@ const meta = {
       description: 'Rich text body content',
       table: { category: 'Content' },
       umbraco: {
-        propertyEditorAlias: 'Umbraco.RichText',
+        propertyEditorAlias: 'Umb.RichText',
         label: 'Body Text',
         alias: 'bodyText',
         mandatory: false,

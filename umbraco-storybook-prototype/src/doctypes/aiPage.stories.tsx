@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
- * Page DocType definition for Umbraco CMS.
+ * Page DocType definition for Umb CMS.
  *
  * This is not a renderable component — it defines the content structure
- * (properties and their editor types) that Umbraco uses to scaffold a
- * Page document type. The Umbraco metadata stored in `parameters` and
- * `argTypes` can be extracted to generate uSync XML files.
+ * (properties and their editor types) that Umb uses to scaffold a
+ * Page document type. The Umb metadata stored in `parameters` and
+ * `argTypes` can be extracted to generate uS XML files.
  */
 
 interface PageDocTypeProps {
@@ -44,7 +44,7 @@ const meta = {
       name: 'AI Page',
       alias: 'aiPage',
       icon: 'icon-document',
-      description: 'A generic content page (AI-generated from Storybook)',
+      description: 'A generic content page (AI-generated from SB)',
       isElement: false,
       allowedAtRoot: true,
       group: 'AI Content',
@@ -56,7 +56,7 @@ const meta = {
       description: 'The page title',
       table: { category: 'Content' },
       umbraco: {
-        propertyEditorAlias: 'Umbraco.TextBox',
+        propertyEditorAlias: 'Umb.TextBox',
         label: 'Page Title',
         alias: 'pageTitle',
         mandatory: true,
@@ -70,7 +70,7 @@ const meta = {
       description: 'The background color of the page',
       table: { category: 'Content' },
       umbraco: {
-        propertyEditorAlias: 'Umbraco.DropDown.Flexible',
+        propertyEditorAlias: 'Umb.DropDown.Flexible',
         label: 'Background Color',
         alias: 'backgroundColor',
         dataTypeGuid: '7fe18493-bd95-40e9-8076-1ed877450db0',

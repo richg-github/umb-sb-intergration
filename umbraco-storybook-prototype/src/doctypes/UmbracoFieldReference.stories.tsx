@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
- * # Umbraco Field Type Reference
+ * # Umb Field Type Reference
  * 
- * This reference shows all available Umbraco field types you can use when creating DocTypes.
+ * This reference shows all available Umb field types you can use when creating DocTypes.
  * 
  * ## How to Use
  * 
- * When adding properties to your DocType stories, use standard Storybook table.type:
+ * When adding properties to your DocType stories, use standard SB table.type:
  * 
  * ```typescript
  * interface MyProps {
@@ -75,7 +75,7 @@ const FieldTypeExample = (args: ExampleProps) => (
           <strong>TypeScript type:</strong> <code>{args.tsType}</code>
         </div>
         <div>
-          <strong>Storybook argTypes:</strong>
+          <strong>SB argTypes:</strong>
           <pre style={{ margin: '0.5rem 0 0 0', padding: '0.5rem', backgroundColor: '#f5f5f5', borderRadius: '4px' }}>
 {`table: {
   type: { summary: '${args.fieldType.toLowerCase()}' }
@@ -101,14 +101,14 @@ const FieldTypeExample = (args: ExampleProps) => (
 );
 
 const meta = {
-  title: 'Umbraco/Field Type Reference',
+  title: 'Umb/Field Type Reference',
   component: FieldTypeExample,
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Reference guide for all available Umbraco field types. Use these type values in your `umbraco.type` metadata.'
+        component: 'Reference guide for all available Umb field types. Use these type values in your `umbraco.type` metadata.'
       }
     }
   },
@@ -259,7 +259,7 @@ export const AllTypesReference: Story = {
       }}>
         <p style={{ margin: 0 }}>
           <strong>💡 How it works:</strong> You add <code>table.type.summary</code> to your argTypes, 
-          backend reads it and translates to the correct Umbraco data type using the mappings file.
+          backend reads it and translates to the correct Umb data type using the mappings file.
         </p>
       </div>
 

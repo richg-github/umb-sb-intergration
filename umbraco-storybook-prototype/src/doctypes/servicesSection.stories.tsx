@@ -72,7 +72,7 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'A services section with featured cards displaying icon, heading, and description. Maps to Umbraco Block List for repeating content.'
+        component: 'A services section with featured cards displaying icon, heading, and description. Maps to Umb Block List for repeating content.'
       }
     }
   },
@@ -88,7 +88,7 @@ const meta = {
     },
     items: {
       control: 'object',
-      description: 'Array of featured cards (Block List in Umbraco)',
+      description: 'Array of featured cards (Block List in Umb)',
       table: {
         type: { summary: 'blocklist' }
       }

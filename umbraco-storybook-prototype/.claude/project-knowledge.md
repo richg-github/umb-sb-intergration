@@ -1,30 +1,30 @@
-# Umbraco Storybook Automation - Project Knowledge
+# Umb SB Automation - Project Knowledge
 
 ## Project Overview
 
-This project automates the creation of Umbraco DocTypes from Storybook component stories. Instead of manually recreating front-end components as back-end DocTypes, we maintain a **single source of truth** in Storybook with embedded Umbraco metadata that can be extracted to generate uSync XML files.
+This project automates the creation of Umb DocTypes from SB component stories. Instead of manually recreating front-end components as back-end DocTypes, we maintain a **single source of truth** in SB with embedded Umb metadata that can be extracted to generate uS XML files.
 
 ### The Problem We're Solving
-- Front-end creates React components in Storybook
-- Back-end manually recreates them as Umbraco DocTypes
+- Front-end creates React components in SB
+- Back-end manually recreates them as Umb DocTypes
 - Time-consuming, error-prone, property names drift out of sync
 
 ### The Solution
-1. **Single source of truth**: Storybook stories with embedded Umbraco metadata
-2. **Automated extraction**: Script reads stories → generates uSync XML files
-3. **Version control**: uSync files in Git → reproducible Umbraco structure
+1. **Single source of truth**: SB stories with embedded Umb metadata
+2. **Automated extraction**: Script reads stories → generates uS XML files
+3. **Version control**: uS files in Git → reproducible Umb structure
 
 ### The Workflow
 ```
-1. Front-end creates React component + Storybook story
+1. Front-end creates React component + SB story
    ↓
-2. Back-end adds Umbraco metadata to the story
+2. Back-end adds Umb metadata to the story
    ↓
 3. Run: npm run extract:usync
    ↓
-4. uSync XML files generated automatically
+4. uS XML files generated automatically
    ↓
-5. Commit to Git → Import to Umbraco → DocTypes created
+5. Commit to Git → Import to Umb → DocTypes created
 ```
 
 ---
@@ -39,9 +39,9 @@ Located in the `meta` object's `parameters.umbraco` section:
 parameters: {
   umbraco: {
     entityType: 'document-type',
-    name: 'Page',                    // Display name in Umbraco
+    name: 'Page',                    // Display name in Umb
     alias: 'page',                   // Unique identifier (camelCase)
-    icon: 'icon-document',           // Umbraco icon name
+    icon: 'icon-document',           // Umb icon name
     description: 'A generic content page',
     isElement: false,                // true for Block Grid elements
     allowedAtRoot: true,             // true for root-level DocTypes
@@ -52,12 +52,12 @@ parameters: {
 
 **Key Fields:**
 - `entityType`: Always `'document-type'`
-- `name`: Human-readable name shown in Umbraco UI
+- `name`: Human-readable name shown in Umb UI
 - `alias`: Unique identifier (camelCase, no spaces)
-- `icon`: Umbraco icon class (see Umbraco icon picker)
+- `icon`: Umb icon class (see Umb icon picker)
 - `isElement`: `true` for Block Grid/Block List elements, `false` for pages/containers
 - `allowedAtRoot`: `true` if this DocType can be created at root level
-- `group`: Category/folder in Umbraco (e.g., "Content", "Blocks", "Settings")
+- `group`: Category/folder in Umb (e.g., "Content", "Blocks", "Settings")
 
 ---
 
@@ -72,7 +72,7 @@ argTypes: {
     description: 'The page title',
     table: { category: 'Content' },
     umbraco: {
-      propertyEditorAlias: 'Umbraco.TextBox',
+      propertyEditorAlias: 'Umb.TextBox',
       label: 'Page Title',
       alias: 'pageTitle',
       mandatory: true,
@@ -84,11 +84,11 @@ argTypes: {
 ```
 
 **Key Fields:**
-- `propertyEditorAlias`: Umbraco property editor identifier (e.g., `Umbraco.TextBox`, `Umbraco.RichText`, `Umbraco.BlockGrid`)
-- `label`: Display name in Umbraco UI
+- `propertyEditorAlias`: Umb property editor identifier (e.g., `Umb.TextBox`, `Umb.RichText`, `Umb.BlockGrid`)
+- `label`: Display name in Umb UI
 - `alias`: Property identifier (camelCase, must match TypeScript prop name)
 - `mandatory`: `true` if required, `false` if optional
-- `group`: Tab/group in Umbraco editor (e.g., "Content", "Settings", "SEO")
+- `group`: Tab/group in Umb editor (e.g., "Content", "Settings", "SEO")
 - `sortOrder`: Display order within the group (0-indexed)
 
 ---
@@ -96,29 +96,29 @@ argTypes: {
 ## Common Property Editor Aliases
 
 ### Text & Content
-- `Umbraco.TextBox` - Single-line text input
-- `Umbraco.TextArea` - Multi-line plain text
-- `Umbraco.RichText` - WYSIWYG rich text editor
-- `Umbraco.MarkdownEditor` - Markdown editor
+- `Umb.TextBox` - Single-line text input
+- `Umb.TextArea` - Multi-line plain text
+- `Umb.RichText` - WYSIWYG rich text editor
+- `Umb.MarkdownEditor` - Markdown editor
 
 ### Media & Files
-- `Umbraco.MediaPicker` - Single/multiple media items
-- `Umbraco.ImageCropper` - Image with crop presets
-- `Umbraco.UploadField` - Direct file upload
+- `Umb.MediaPicker` - Single/multiple media items
+- `Umb.ImageCropper` - Image with crop presets
+- `Umb.UploadField` - Direct file upload
 
 ### Structured Content
-- `Umbraco.BlockGrid` - Block-based layout editor
-- `Umbraco.BlockList` - List of content blocks
-- `Umbraco.ContentPicker` - Reference to other content nodes
-- `Umbraco.MultiNodeTreePicker` - Multiple content references
+- `Umb.BlockGrid` - Block-based layout editor
+- `Umb.BlockList` - List of content blocks
+- `Umb.ContentPicker` - Reference to other content nodes
+- `Umb.MultiNodeTreePicker` - Multiple content references
 
 ### Selection & Configuration
-- `Umbraco.ColorPicker` - Hex color picker
-- `Umbraco.Slider` - Numeric slider
-- `Umbraco.TrueFalse` - Boolean toggle
-- `Umbraco.Dropdown` - Select dropdown
-- `Umbraco.RadioButtonList` - Radio button group
-- `Umbraco.CheckBoxList` - Multiple checkboxes
+- `Umb.ColorPicker` - Hex color picker
+- `Umb.Slider` - Numeric slider
+- `Umb.TrueFalse` - Boolean toggle
+- `Umb.Dropdown` - Select dropdown
+- `Umb.RadioButtonList` - Radio button group
+- `Umb.CheckBoxList` - Multiple checkboxes
 
 ### Custom Editors
 - Use format: `YourNamespace.EditorName` (e.g., `Our.Custom.BackgroundColorPicker`)
@@ -139,14 +139,14 @@ src/doctypes/
 - No actual React component (or minimal preview component)
 - `isElement: false`
 - `allowedAtRoot: true` (usually)
-- Defines content structure for Umbraco
+- Defines content structure for Umb
 
 ### Components (Blocks/Elements)
 ```
 src/components/
   TextBlock/
     TextBlock.tsx          # React component
-    TextBlock.stories.tsx  # Storybook story + Umbraco metadata
+    TextBlock.stories.tsx  # SB story + Umb metadata
   Hero/
     Hero.tsx
     Hero.stories.tsx
@@ -167,13 +167,13 @@ src/components/
 - **Prop names**: camelCase (e.g., `pageTitle`, `backgroundColor`)
 - **File names**: Match component name (e.g., `TextBlock.tsx`)
 
-### Umbraco
+### Umb
 - **Aliases**: camelCase, match TypeScript prop names exactly (e.g., `pageTitle`, `mainContent`)
 - **Display names**: Title Case with spaces (e.g., "Page Title", "Main Content")
 - **Groups**: Title Case (e.g., "Content", "Settings", "SEO")
 
 ### Consistency Rule
-**The Umbraco `alias` MUST match the TypeScript prop name exactly.**
+**The Umb `alias` MUST match the TypeScript prop name exactly.**
 
 Example:
 ```typescript
@@ -183,7 +183,7 @@ interface TextBlockProps {
   bodyText?: string; // ← prop name
 }
 
-// Storybook story
+// SB story
 argTypes: {
   heading: {  // ← must match
     umbraco: {
@@ -209,7 +209,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TextBlock } from './TextBlock';
 
 const meta = {
-  title: 'Components/TextBlock',  // Storybook category/name
+  title: 'Components/TextBlock',  // SB category/name
   component: TextBlock,
   tags: ['autodocs'],
   parameters: {
@@ -230,7 +230,7 @@ const meta = {
       description: 'The block heading',
       table: { category: 'Content' },
       umbraco: {  // ← PROPERTY METADATA
-        propertyEditorAlias: 'Umbraco.TextBox',
+        propertyEditorAlias: 'Umb.TextBox',
         label: 'Heading',
         alias: 'heading',  // ← Must match prop name
         mandatory: false,
@@ -243,7 +243,7 @@ const meta = {
       description: 'Rich text body content',
       table: { category: 'Content' },
       umbraco: {
-        propertyEditorAlias: 'Umbraco.RichText',
+        propertyEditorAlias: 'Umb.RichText',
         label: 'Body Text',
         alias: 'bodyText',  // ← Must match prop name
         mandatory: false,
@@ -267,7 +267,7 @@ export const Default: Story = {
 
 ---
 
-## uSync XML Generation
+## uS XML Generation
 
 The extraction script will:
 
@@ -291,13 +291,13 @@ usync/
 ## Development Commands
 
 ```bash
-# Start Storybook (port 6006)
+# Start SB (port 6006)
 npm run storybook
 
-# Extract Storybook metadata → uSync XML
+# Extract SB metadata → uS XML
 npm run extract:usync
 
-# Build production Storybook
+# Build production SB
 npm run build-storybook
 ```
 
@@ -305,14 +305,14 @@ npm run build-storybook
 
 ## Tips & Best Practices
 
-### 1. Start with Storybook, Add Umbraco Later
-Create the React component and Storybook story first. Get it working and reviewed. Then add the `umbraco` metadata blocks.
+### 1. Start with SB, Add Umb Later
+Create the React component and SB story first. Get it working and reviewed. Then add the `umbraco` metadata blocks.
 
 ### 2. Use Autocomplete-Friendly Metadata
 Define TypeScript interfaces for the metadata structure to get autocomplete and type checking:
 
 ```typescript
-interface UmbracoDocTypeMetadata {
+interface UmbDocTypeMetadata {
   entityType: 'document-type';
   name: string;
   alias: string;
@@ -323,7 +323,7 @@ interface UmbracoDocTypeMetadata {
   group: string;
 }
 
-interface UmbracoPropertyMetadata {
+interface UmbPropertyMetadata {
   propertyEditorAlias: string;
   label: string;
   alias: string;
@@ -336,31 +336,31 @@ interface UmbracoPropertyMetadata {
 ### 3. Keep Aliases in Sync
 The most common error is mismatched aliases. Use the same name for:
 - TypeScript prop
-- Storybook arg
-- Umbraco alias
+- SB arg
+- Umb alias
 
 ### 4. Document Custom Property Editors
 If you use custom property editors (e.g., `Our.Custom.BackgroundColorPicker`), document them in this file or in `usync-mappings.json`.
 
-### 5. Test in Storybook First
-Always verify your stories render correctly in Storybook before running the extraction script. If Storybook can't parse it, neither can the extractor.
+### 5. Test in SB First
+Always verify your stories render correctly in SB before running the extraction script. If SB can't parse it, neither can the extractor.
 
 ---
 
 ## Known Limitations
 
 1. **No nested components** - The extractor reads `.stories.tsx` files only. Nested component metadata must be defined in separate stories.
-2. **No conditional properties** - Umbraco doesn't support conditional fields (yet). Use separate DocTypes if needed.
-3. **Block Grid configuration** - Advanced Block Grid settings (allowed blocks, min/max, etc.) may need manual configuration in Umbraco after import.
+2. **No conditional properties** - Umb doesn't support conditional fields (yet). Use separate DocTypes if needed.
+3. **Block Grid configuration** - Advanced Block Grid settings (allowed blocks, min/max, etc.) may need manual configuration in Umb after import.
 
 ---
 
 ## Future Enhancements
 
-- [ ] Two-way sync: Umbraco changes → update Storybook metadata
+- [ ] Two-way sync: Umb changes → update SB metadata
 - [ ] Validation script: Check for missing metadata or mismatched aliases
 - [ ] CLI tool: `npx umbraco-storybook init` to scaffold new components
-- [ ] Visual diff: Compare uSync XML changes before commit
+- [ ] Visual diff: Compare uS XML changes before commit
 
 ---
 

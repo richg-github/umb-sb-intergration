@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
- * Hero DocType definition for Umbraco CMS.
+ * Hero DocType definition for Umb CMS.
  * 
  * A hero component with heading, description, background color, symbol, image and back link.
  */

@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
- * # Umbraco CMS Integration
+ * # Umb CMS Integration
  * 
- * This Storybook project defines content structures that sync with Umbraco CMS.
+ * This SB project defines content structures that sync with Umb CMS.
  * 
  * ## How It Works
  * 
  * ```
- * Your Storybook Story → uSync Config → Umbraco CMS → Delivery API → Your App
+ * Your SB Story → uS Config → Umb CMS → Delivery API → Your App
  * ```
  * 
- * 1. You create a DocType story with TypeScript interfaces and Umbraco metadata
- * 2. Backend generates uSync XML from your story
- * 3. Umbraco imports the config and creates the content type
+ * 1. You create a DocType story with TypeScript interfaces and Umb metadata
+ * 2. Backend generates uS XML from your story
+ * 3. Umb imports the config and creates the content type
  * 4. Content editors use it to create/edit content
  * 5. Delivery API serves it as JSON to your Astro/Next.js app
  */
@@ -25,9 +25,9 @@ const IntroductionGuide = () => (
     maxWidth: '900px',
     lineHeight: 1.6
   }}>
-    <h1>Umbraco CMS Integration</h1>
+    <h1>Umb CMS Integration</h1>
     <p style={{ fontSize: '1.125rem', color: '#666' }}>
-      This Storybook project defines content structures that sync with Umbraco CMS.
+      This SB project defines content structures that sync with Umb CMS.
     </p>
 
     <h2>How It Works</h2>
@@ -38,13 +38,13 @@ const IntroductionGuide = () => (
       fontFamily: 'monospace',
       marginBottom: '2rem'
     }}>
-      Your Storybook Story → uSync Config → Umbraco CMS → Delivery API → Your App
+      Your SB Story → uS Config → Umb CMS → Delivery API → Your App
     </div>
 
     <ol>
-      <li><strong>You create a DocType story</strong> with TypeScript interfaces and Umbraco metadata</li>
-      <li><strong>Backend generates uSync XML</strong> from your story</li>
-      <li><strong>Umbraco imports the config</strong> and creates the content type</li>
+      <li><strong>You create a DocType story</strong> with TypeScript interfaces and Umb metadata</li>
+      <li><strong>Backend generates uS XML</strong> from your story</li>
+      <li><strong>Umb imports the config</strong> and creates the content type</li>
       <li><strong>Content editors use it</strong> to create/edit content</li>
       <li><strong>Delivery API serves it</strong> as JSON to your Astro/Next.js app</li>
     </ol>
@@ -67,7 +67,7 @@ const IntroductionGuide = () => (
     </pre>
 
     <h3>2. Add Table Type Metadata</h3>
-    <p>Use standard Storybook features - everything is visible in docs:</p>
+    <p>Use standard SB features - everything is visible in docs:</p>
     <pre style={{ 
       backgroundColor: '#f5f5f5', 
       padding: '1rem', 
@@ -85,7 +85,7 @@ const IntroductionGuide = () => (
   description: {
     control: 'textarea',
     table: {
-      type: { summary: 'richtext' }  // Creates TinyMCE in Umbraco
+      type: { summary: 'richtext' }  // Creates TinyMCE in Umb
     }
   },
   backgroundColor: {
@@ -103,10 +103,10 @@ const IntroductionGuide = () => (
     <ul>
       <li>Reads <code>table.type.summary: 'richtext'</code> from argTypes</li>
       <li>Looks it up in the mappings file</li>
-      <li>Gets the correct Umbraco data type GUID</li>
+      <li>Gets the correct Umb data type GUID</li>
       <li>Checks TypeScript <code>?</code> or <code>category: 'Required'</code> for mandatory flag</li>
-      <li>Generates the uSync XML</li>
-      <li>Imports it to Umbraco</li>
+      <li>Generates the uS XML</li>
+      <li>Imports it to Umb</li>
     </ul>
 
     <h2>Available Field Types</h2>
@@ -149,16 +149,16 @@ const IntroductionGuide = () => (
       </pre>
     </div>
 
-    <h3 style={{ marginTop: '2rem' }}>Storybook Controls ≠ CMS Editors</h3>
-    <p>The Storybook control is just for previewing in Storybook:</p>
+    <h3 style={{ marginTop: '2rem' }}>SB Controls ≠ CMS Editors</h3>
+    <p>The SB control is just for previewing in SB:</p>
     <pre style={{ 
       backgroundColor: '#f5f5f5', 
       padding: '1rem', 
       borderRadius: '4px'
     }}>
-{`control: 'textarea'             // ← Just for Storybook preview
+{`control: 'textarea'             // ← Just for SB preview
 table: {
-  type: { summary: 'richtext' }  // ← Creates TinyMCE in Umbraco
+  type: { summary: 'richtext' }  // ← Creates TinyMCE in Umb
 }`}
     </pre>
 
@@ -184,7 +184,7 @@ table: {
     <p>If you need a field type that's not listed:</p>
     <ol>
       <li>Ask backend to add it to <code>umbraco-property-mappings.json</code></li>
-      <li>They'll configure the Umbraco data type</li>
+      <li>They'll configure the Umb data type</li>
       <li>It'll be available for everyone to use</li>
     </ol>
 
@@ -198,13 +198,13 @@ table: {
 );
 
 const meta = {
-  title: 'Umbraco/Introduction',
+  title: 'Umb/Introduction',
   component: IntroductionGuide,
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Complete guide to creating Umbraco-synced content types in Storybook'
+        component: 'Complete guide to creating Umb-synced content types in SB'
       }
     }
   },
