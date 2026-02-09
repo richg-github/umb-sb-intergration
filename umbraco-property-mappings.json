@@ -56,6 +56,14 @@
       "editorAlias": "Umbraco.MultiUrlPicker",
       "tsType": "{ href: string; text: string }",
       "notes": "Picks internal/external links. Frontend receives object with url info."
+    },
+    "blocklist": {
+      "description": "Repeating content blocks (Block List editor)",
+      "umbracoDataType": "Block List",
+      "dataTypeGuid": "TODO-create-in-umbraco",
+      "editorAlias": "Umbraco.BlockList",
+      "tsType": "Array<ElementType>",
+      "notes": "Complex editor for repeating structured content. Requires: 1) Element Types to define block structure, 2) Block List data type configured with allowed element types. Frontend defines array of objects - each object property becomes a field in the Element Type. Example: items: FeaturedCard[] where FeaturedCard has { heading, description, icon } properties."
     }
   },
   "mappings": {

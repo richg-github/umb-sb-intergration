@@ -171,6 +171,15 @@ export const UrlPicker: Story = {
   }
 };
 
+export const BlockList: Story = {
+  args: {
+    fieldType: 'blocklist',
+    description: 'Repeating content blocks (like feature cards, testimonials, FAQ items). Each item in the array becomes a block that editors can add/reorder. The object properties define the fields within each block.',
+    tsType: 'Array<{ heading: string; description: string; ... }>',
+    example: '[{ heading: "Feature 1", description: "..." }, { heading: "Feature 2", description: "..." }]'
+  }
+};
+
 // Summary of all available types
 export const AllTypesReference: Story = {
   render: () => (
@@ -224,6 +233,11 @@ export const AllTypesReference: Story = {
             <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}><code>{'{ href, text }'}</code></td>
             <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}>Navigation links, CTAs</td>
           </tr>
+          <tr>
+            <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}><code>blocklist</code></td>
+            <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}><code>{'Array<ElementType>'}</code></td>
+            <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}>Repeating content blocks</td>
+          </tr>
         </tbody>
       </table>
 
@@ -234,7 +248,6 @@ export const AllTypesReference: Story = {
         <li><code>checkbox</code> - Boolean true/false</li>
         <li><code>datepicker</code> - Date selection</li>
         <li><code>contentpicker</code> - Content node selection</li>
-        <li><code>blocklist</code> - Nested block content</li>
         <li><code>blockgrid</code> - Grid-based block content</li>
       </ul>
 
